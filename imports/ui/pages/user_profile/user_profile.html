@@ -27,6 +27,14 @@
                 <label for="input-email">Email Address:</label>
                 <div class="form-group">
                     <input id="input-email" type="text" class="form-control flat" value="{{emailAddress}}" />
+                    <button type="button" id="btn-email-change" class="btn btn-default btn-email-change">Change Email Address</button>
+                    <div class="change-email-div">
+                        <input id="input-new-email" type="text" class="form-control flat input-new-email" value="" style="visibility: hidden; display:none;"/>
+                        <div id="btn-email-group" class="col-sm-8 text-right btn-group-xs" ><em style="visibility: hidden; display:none;">
+                            <button id="save-email" class="btn btn-success btn-save glyphicon glyphicon-ok details save-email" alt="Save changes"></button>
+                            <button id="cancel-email" class="btn btn-warning btn-cancel glyphicon glyphicon-remove details cancel-email" alt="Discard changes"></button>
+                        </em></div>
+                    </div>
                 </div>
             </div>
         </div>
