@@ -108,4 +108,29 @@ Meteor.startup(() => {
             res.end();
         }
 	});
+
+  //let admin = Meteor.users.find({ emails[0]: "admin@mydomain.com"});
+  // used to create
+  for (let i = 1; i <= 10; i++) {
+      let qText = "question" + toString(i);
+      Question.insert({
+          //CreatedBy: admin.userId,
+          CreatedBy: "JcEMsPDHR9MvWfSLB",
+          //CreatedBy: userId,
+          Category: 0,
+          Text: qText
+      });
+  }
+
+  /*
+  Meteor.call('question.insert', "Categories1", "Text1", "LeftText1", "RightText1", "segments1", (error) => {
+      if (error) {
+          console.log("EEEEEERRRORRRRR: ", error);
+      } else {
+          //target.Text.value = '';
+          //target.LeftText.value = '';
+          //target.RightText.value = '';
+      }
+  });
+  */
 });
