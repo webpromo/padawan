@@ -109,18 +109,22 @@ Meteor.startup(() => {
         }
 	});
 
-  //let admin = Meteor.users.find({ emails[0]: "admin@mydomain.com"});
-  // used to create
-  for (let i = 1; i <= 10; i++) {
-      let qText = "question" + toString(i);
-      Question.insert({
-          //CreatedBy: admin.userId,
-          CreatedBy: "JcEMsPDHR9MvWfSLB",
-          //CreatedBy: userId,
-          Category: 0,
-          Text: qText
-      });
+  if(Question.find().count() < 9) {
+      let theAdmin = Meteor.users.findOne({ username: "admin" });
+      // used to create
+      for (let i = 1; i < 11; i++) {
+          let str = i.toString();
+          let qText = "question" + str;
+          Question.insert({
+              //CreatedBy: admin.userId,
+              CreatedBy: theAdmin._id,
+              //CreatedBy: userId,
+              Category: 0,
+              Text: qText
+          });
+      }
   }
+
 
   /*
   Meteor.call('question.insert', "Categories1", "Text1", "LeftText1", "RightText1", "segments1", (error) => {
