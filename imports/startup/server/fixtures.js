@@ -109,23 +109,22 @@ Meteor.startup(() => {
         }
 	});
 
-  if(Question.find().count() < 9) {
-      let theAdmin = Meteor.users.findOne({ username: "admin" });
-      // used to create
-      for (let i = 1; i < 11; i++) {
+
+  // creates totalQ questions if there are less then addQ Questions
+  const addQ = 6;
+  const totalQ = 10;
+  if(Question.find().count() < addQ) {
+      for (let i = 1; i <= totalQ; i++) {
           let str = i.toString();
           let qText = "question" + str;
-          Question.insert({
-              //CreatedBy: admin.userId,
+          let q = new Question({
               CreatedBy: theAdmin._id,
-              //CreatedBy: userId,
               Category: 0,
               Text: qText
           });
+          q.save();
       }
   }
-
-
   /*
   Meteor.call('question.insert', "Categories1", "Text1", "LeftText1", "RightText1", "segments1", (error) => {
       if (error) {
