@@ -33,7 +33,12 @@ RUN chown -Rh ${APP_USER} /usr/local
 USER ${APP_USER}
 
 # install Meteor
-RUN curl https://install.meteor.com/ | sh
+#RUN curl https://install.meteor.com/ | sh
+USER root
+RUN apt-get install -y bsdtar && ln -sf $(which bsdtar) $(which tar)
+RUN curl "https://install.meteor.com/" | sh
+USER ${APP_USER}
+
 #RUN pwd && ls -ltrh
 # run Meteor from the app directory
 WORKDIR ${APP_ROOT}

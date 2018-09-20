@@ -17,5 +17,7 @@ services:
         restart: always
         volumes:
             - "db-data:/data/db"
+        ports:
+            - 3001:27017
 volumes:
     db-data:
