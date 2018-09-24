@@ -26,9 +26,16 @@ Run Padawan on your localhost
 3. [Run] `cd {Your Path}/padawan/docker/dev`
 4. `docker-compose build`
 5. `docker-compose up`
-6. [Browse to localhost:3000 and see the app running](http://localhost:3000)
-7. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
-8. Create some of your own questions here: http://localhost:3000/addQuestions/IE
+6. Use a program like [MongoDB Compass](https://docs.mongodb.com/compass/master/install/) to change admin verification to true.
+   * Hostname: localhost
+   * Port: 3001
+   * Click `CONNECT`
+   * Under `My Cluster` choose `meteor > users > emails > 0: Object`
+   * Change `verified: false` to `verified: true`
+7. [Browse to localhost:3000 and see the app running](http://localhost:3000)
+8. Login with the Default admin credentials: `admin@mydomain.com` and `admin`
+9. Create some of your own questions here: http://localhost:3000/addQuestions/IE
+10. Use `docker-compose down` when finished 
 
 **Licensing**
 - - - - - - - -
