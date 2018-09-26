@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { chai } from 'meteor/practicalmeteor:chai';
+import { sinon } from 'meteor/practicalmeteor:sinon';
 import { IndividualGoal } from './individual_goals.js';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
