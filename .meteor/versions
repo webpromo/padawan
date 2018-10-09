@@ -48,6 +48,7 @@ jagi:astronomy-slug-behavior@3.0.0
 jagi:astronomy-softremove-behavior@2.0.8
 jagi:astronomy-timestamp-behavior@2.0.0
 jeremy:selectize@0.12.1_5
+johanbrook:publication-collector@1.1.0
 jparker:crypto-core@0.1.0
 jparker:crypto-md5@0.1.1
 jparker:gravatar@0.5.1

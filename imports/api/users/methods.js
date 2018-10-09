@@ -74,4 +74,9 @@ Meteor.methods({
         console.log("Entered deleteEmail");
         Accounts.removeEmail(Meteor.userId(), unwantedEmail);
     }
+
+    // This method is for use in mocha testing
+    'user.addUser'(whatever) {
+        console.log("entered user.addUser");
+    }
 })
