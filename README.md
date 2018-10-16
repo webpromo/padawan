@@ -28,6 +28,7 @@ Run Padawan on your localhost
 4. `docker-compose build`
    * If you are using windows you may need to format the line endings for the file `padawan-node-setup.sh`
       * in vim (`vim padawan-node-setup.sh`) you can do this using the command `:set ff=unix` followed by `:wq`
+   * If Docker isn't running, start Docker
 5. `docker-compose up`
 6. Use a program like [MongoDB Compass](https://docs.mongodb.com/compass/master/install/) to change admin verification to true.
    * Hostname: localhost
