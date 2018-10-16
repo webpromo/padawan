@@ -24,7 +24,10 @@ Run Padawan on your localhost
 2. [Clone Padawan Repo](https://services.github.com/on-demand/github-cli/clone-repo-cli) (URL is above)
    * Make sure Padawan is [shared with Docker](https://docs.docker.com/docker-for-windows/#shared-drives)
 3. [Run] `cd {Your Path}/padawan/docker/dev`
+   * If the path doesn't exist, run `cd {Your Path}/padawan/docker/staging`
 4. `docker-compose build`
+   * If you are using windows you may need to format the line endings for the file `padawan-node-setup.sh`
+      * in vim (`vim padawan-node-setup.sh`) you can do this using the command `:set ff=unix` followed by `:wq`
 5. `docker-compose up`
 6. Use a program like [MongoDB Compass](https://docs.mongodb.com/compass/master/install/) to change admin verification to true.
    * Hostname: localhost
