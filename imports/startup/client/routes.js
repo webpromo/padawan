@@ -39,14 +39,14 @@ let ensureEmailVerified = function() {
 
 // Set up all routes in the app
 FlowRouter.route('/', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	// triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'App.home',
     action() {
       FlowRouter.redirect("/dashboard");
     },
 });
 FlowRouter.route('/dashboard', {
-	triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
+	// triggersEnter: [AccountsTemplates.ensureSignedIn,ensureEmailVerified],
     name: 'dashboard',
     action() {
       BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });

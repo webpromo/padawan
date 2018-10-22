@@ -9,9 +9,12 @@ import { Answer } from "../users/users.js";
 import { UserType } from "../users/users.js";
 import { Profile } from "../users/users.js";
 import { UserNotify } from '/imports/api/user_notify/user_notify.js';
+import '/imports/startup/both/at_config.js';
+import { PublicationCollector } from 'meteor/johanbrook:publication-collector';
+import { Random } from 'meteor/random'
 
 // // create a default user (admin)
-// if (!Meteor.users.findOne( {username: Defaults.user.username} )) {
+// if (!User.findOne( {username: Defaults.user.username} )) {
 //     defaultUser = Accounts.createUser({
 //         username: Defaults.user.username,
 //         email: Defaults.user.email,
@@ -28,15 +31,18 @@ import { UserNotify } from '/imports/api/user_notify/user_notify.js';
 let testData;
 let defaultUser;
 
-if (Meteor.isServer) {
+if (Meteor.isServer)
+{
     describe('Questions', function () {
         this.timeout(15000);
 
         beforeEach(function() {
             resetDatabase();
 
-            defaultUser = Accounts.createUser({
+
+            defaultUser = new User({
                 username: Defaults.user.username,
+                // username: "Bob",
                 email: Defaults.user.email,
                 password: 'admin',
                 isAdmin: Defaults.user.isAdmin,
@@ -56,12 +62,12 @@ if (Meteor.isServer) {
                 }
             };
 
-            sinon.stub(Meteor, 'userId').returns(defaultUser._id);
+            // sinon.stub(Meteor, 'userId').returns(defaultUser._id);
         });
 
         afterEach(function () {
-            Meteor.userId.restore();
-            resetDatabase();
+            // Meteor.userId.restore();
+            // resetDatabase();
         });
         it('totalQuestions is greater than or equal to 0', function () {
             let totalQuestions = Question.find().count();
@@ -71,6 +77,7 @@ if (Meteor.isServer) {
         it('can create a question', function () {
             let q = new Question( testData.testQuestion );
             q.save();
+            console.log("can create a question, q:", q);
             let qTest = Question.findOne( {_id:q._id} );
             chai.assert( qTest, true );
 
@@ -118,49 +125,67 @@ if (Meteor.isServer) {
             chai.assert(rsRemove == rsAdd - 1);
 
         });
-        it('todo allAnsweredUsers returns at least one user that answered the question', function() {
-            let uid = User.findOne( {username: Defaults.user.username} )._id;
-            let q = new Question( testData.testQuestion );
-            q.CreatedBy = uid;
-            q.save();
-            // create 'MyProfile.UserType.AnsweredQuestions.QuestionID for u
-            let a = new Answer( {QuestionID: q._id} );
-            // a.save();
-            let ut = new UserType( {AnsweredQuestions: [a]} );
-            // ut.save();
-            let p = new Profile({UserType: ut,
-                firstName: 'Admin',
-                lastName: 'Admin',
-                gender: 'female'});
-            Meteor.users.update({_id: uid}, {$set: {MyProfile: p}});
-            Meteor.users.update({_id: uid}, {$set: {'MyProfile.UserType': ut}});
-            Meteor.users.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestions': [a]}});
-            Meteor.users.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestions[0].QuestionID': q._id}});
-            console.log("User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0].QuestionID: ", User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0].QuestionID);
-            console.log("User.findOne(uid).MyProfile.UserType.AnsweredQuestions: ", User.findOne(uid).MyProfile.UserType.AnsweredQuestions);
-            Meteor.users.update({_id: uid}, {$set: {'MyProfile.firstName': 'Pringle'}});
-            console.log("User.findOne(uid).MyProfile.firstName", User.findOne(uid).MyProfile.firstName);
-            Meteor.users.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestion[0].QuestionID': q._id}});
-            console.log("User.findOne(uid).MyProfile.UserType.UserType.AnsweredQuestions[0]", User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0]);
-            let uTest = q.allAnsweredUsers();
-            // console.log("uTest[0]._id", uTest[0]._id);
-            console.log("q._id: ", q._id);
-            console.log("uTest.fetch(): ", uTest.fetch());
-            let qid = q._id;
-            let uTemp1 =  User.find({ 'MyProfile.UserType.AnsweredQuestions[0].QuestionID': qid });
-            let uTemp2 =  User.find({ 'MyProfile.firstName':{ $eq: 'Pringle' } });
-            let uTemp3 =  User.find({ 'MyProfile.UserType.AnsweredQuestions': { $elemMatch: { 'QuestionID': qid } } });
-            // let uTemp3 =  User.find({ });
-            // let uTemp3 =  User.find({ pid: {$elemMatch: {$in: user.MyProfile.UserType.AnsweredQuestions.QuestionID} } });
-            // let uTemp3 = User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq: qid } });
-            // let uTemp3 =  User.find({ 'MyProfile.UserType.AnsweredQuestions': { $elemMatch: { 'QuestionID': qid } } });
-            // let uTemp3 =  User.find({ MyProfile: { $elemMatch: { UserType: { $elemMatch: { AnsweredQuestions: { $elemMatch: { QuestionID: qid } } } } } } });
 
-            console.log("uTemp1.fetch(): ", uTemp1.fetch());
-            console.log("uTemp2.fetch(): ", uTemp2.fetch());
-            console.log("uTemp3.fetch(): ", uTemp3.fetch());
-            console.log("User.findOne(uid).MyProfile.first_name", User.findOne(uid).MyProfile.firstName);
-            console.log("User.findOne(uid): ", User.findOne(uid));
+        it('todo allAnsweredUsers returns at least one user that answered the question', function() { // We need to be able to access the database to test this function
+
+
+            // console.log("after bobUser");
+            // let uid = User.findOne( {username: "userBob"} )._id;
+            // console.log("uid: ", uid);
+            // console.log("User.findOne( {username: userBob} ): ", User.findOne( {username: "userBob"} ) );
+            // let q = new Question( testData.testQuestion );
+            // q.CreatedBy = uid;
+            // console.log("before q.save()");
+            // q.save();
+            // console.log("after q.save()");
+            // // create 'MyProfile.UserType.AnsweredQuestions.QuestionID for u
+            // let a = new Answer( {QuestionID: q._id} );
+            // // a.save();
+            // let ut = new UserType( {AnsweredQuestions: [a]} );
+            // // ut.save();
+            // let p = new Profile({UserType: ut,
+            //     firstName: 'Admin',
+            //     lastName: 'Admin',
+            //     gender: 'false'});
+            // console.log("before updates");
+            // console.log("a:", a);
+            // console.log("ut:", ut);
+            // console.log("p:", p);
+            // User.update({_id: uid}, {$set: {MyProfile: p}});
+            // console.log("after first update");
+            // User.update({_id: uid}, {$set: {'MyProfile.UserType': ut}});
+            // User.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestions': [a]}});
+            // User.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestions[0].QuestionID': q._id}});
+            // console.log("inside updates");
+            // console.log("User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0].QuestionID: ", User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0].QuestionID);
+            // console.log("User.findOne(uid).MyProfile.UserType.AnsweredQuestions: ", User.findOne(uid).MyProfile.UserType.AnsweredQuestions);
+            // User.update({_id: uid}, {$set: {'MyProfile.firstName': 'Pringle'}});
+            // console.log("User.findOne(uid).MyProfile.firstName", User.findOne(uid).MyProfile.firstName);
+            // User.update({_id: uid}, {$set: {'MyProfile.UserType.AnsweredQuestion[0].QuestionID': q._id}});
+            // console.log("User.findOne(uid).MyProfile.UserType.UserType.AnsweredQuestions[0]", User.findOne(uid).MyProfile.UserType.AnsweredQuestions[0]);
+            // let uTest = q.allAnsweredUsers();
+            // // console.log("uTest[0]._id", uTest[0]._id);
+            // console.log("q._id: ", q._id);
+            // console.log("uTest.fetch(): ", uTest.fetch());
+            // let qid = q._id;
+            // let uTemp1 =  User.find({ 'MyProfile.UserType.AnsweredQuestions[0].QuestionID': qid });
+            // let uTemp2 =  User.find({ 'MyProfile.firstName':{ $eq: 'Pringle' } });
+            // let uTemp3 =  User.find({ 'MyProfile.UserType.AnsweredQuestions': { $elemMatch: { 'QuestionID': qid } } });
+            // // let uTemp3 =  User.find({ });
+            // // let uTemp3 =  User.find({ pid: {$elemMatch: {$in: user.MyProfile.UserType.AnsweredQuestions.QuestionID} } });
+            // // let uTemp3 = User.find({ 'MyProfile.UserType.AnsweredQuestions.QuestionID':{ $eq: qid } });
+            // // let uTemp3 =  User.find({ 'MyProfile.UserType.AnsweredQuestions': { $elemMatch: { 'QuestionID': qid } } });
+            // // let uTemp3 =  User.find({ MyProfile: { $elemMatch: { UserType: { $elemMatch: { AnsweredQuestions: { $elemMatch: { QuestionID: qid } } } } } } });
+            //
+            // console.log("uTemp1.fetch(): ", uTemp1.fetch());
+            // console.log("uTemp2.fetch(): ", uTemp2.fetch());
+            // console.log("uTemp3.fetch(): ", uTemp3.fetch());
+            // console.log("User.findOne(uid).MyProfile.first_name", User.findOne(uid).MyProfile.firstName);
+            // console.log("User.findOne(uid): ", User.findOne(uid));
+
+
+
+
             // console.log("uTest.MyProfile.UserType.AnsweredQuestions[0].QuestionID", uTest.MyProfile.UserType.AnsweredQuestions[0].QuestionID);
             // console.log("a: ", a);
             // console.log("ut: ", ut);
@@ -193,7 +218,7 @@ if (Meteor.isServer) {
             // let p = new Profile({UserType: ut,
             //     first_name: 'Admin',
             //     last_name: 'Admin',
-            //     gender: 'female'});
+            //     gender: 'false'});
             // p.birthDate = new Date(2000, 0, 1);
             // console.log("p.birthDate: ", p.birthDate);
             //
@@ -246,7 +271,7 @@ if (Meteor.isServer) {
             // let q = new Question( testData.testQuestion );
             // let u = q.allAnsweredUsers();
         });
-        it('todo unanswerAll unanswers the question for all users', function() {
+        it('todo unanswerAll unanswers the question for all users', function() { // We need to be able to access the database to test this function
             // Once the allAnsweredUsers test is working, you should be able to create this code based off of that code.
         });
         it('reset() resets TimesAnswered and SumOfAnswers', function() {

@@ -82,7 +82,7 @@ const Team = Class.create({
                 Roles.addUsersToRoles(user, 'admin-join-request', this.Name);
                 for (let i = 0; i < user.length; i++) {
                     UserNotify.add({
-                        userId: user[i],
+                        userId: user[i]._id,
                         title: 'Teams',
                         body: 'Received join request for team ' + this.Name,
                         action: 'teams:'+this.Name.split(' ').join('-')
@@ -91,8 +91,10 @@ const Team = Class.create({
             }
         },
         userAcceptJoin() {
+            console.log("entered userAcceptJoin");
             if (Roles.userIsInRole(Meteor.userId(), 'admin-join-request', this.Name)) {
                 Roles.removeUsersFromRoles(Meteor.userId(), 'admin-join-request', this.Name);
+                console.log("almost in addUsers");
                 this.addUsers(Meteor.userId());
             }
         },
@@ -144,6 +146,7 @@ const Team = Class.create({
     },
     helpers: {
         addUsers(users) {
+            console.log("entered addUsers"); //delete this
             if (typeof users === 'string') {
                 users = [users];
             }
@@ -156,7 +159,7 @@ const Team = Class.create({
                     user.roles[this.Name].indexOf('admin') > -1
                 );
             });
-
+            console.log("Before for");
             for (let i = 0; i < users.length; i++) {
                 if (this.Members.indexOf(users[i]) === -1) {
                     this.Members.push( users[i] );
@@ -181,6 +184,7 @@ const Team = Class.create({
                 }
                 */
             }
+            console.log("after for");
             this.save();
         },
         removeUsers(users) {

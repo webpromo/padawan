@@ -6,7 +6,7 @@ const Defaults = {
 		'profile': {
 			'first_name': 'Admin',
 			'last_name': 'Admin',
-			'gender': 'female'
+			'gender': 'false'
 		}
 	},
 	'team': {
