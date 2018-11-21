@@ -12,6 +12,7 @@ import { LearnShareSession } from '../../api/learn_share/learn_share.js';
 import { IndividualGoal } from '../../api/individual_goals/individual_goals.js';
 import { Category, CategoryManager } from '../../api/categories/categories.js';
 import { setupApi } from '../../api/auth/index.js';
+import {express} from 'express';
 
 
 Meteor.startup(() => {

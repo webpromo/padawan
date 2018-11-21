@@ -12,6 +12,7 @@
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.3",
     "meteor-node-stubs": "^0.2.11",
+    "meteor-promise": "^0.8.6",
     "mongo": "^0.1.0"
   },
   "devDependencies": {
